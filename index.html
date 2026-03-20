@@ -641,33 +641,34 @@
     </p>
 
     <!-- Form -->
-<form class="reveal bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate/10" action="https://formspree.io/f/mreydpgz" method="POST" onsubmit="handleSubmit(event)">      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+    <form class="reveal bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate/10" action="https://formspree.io/f/mreydpgz" method="POST">
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">YOUR NAME *</label>
-          <input type="text" required placeholder="Mike Ramirez" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="text" name="name" required placeholder="Mike Ramirez" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">BUSINESS NAME *</label>
-          <input type="text" required placeholder="Ramirez Plumbing LLC" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="text" name="business" required placeholder="Ramirez Plumbing LLC" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
       </div>
       <div class="grid sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">PHONE NUMBER *</label>
-          <input type="tel" required placeholder="(602) 555-0182" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="tel" name="phone" required placeholder="(602) 555-0182" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">YOUR ZIP CODE *</label>
-          <input type="text" required placeholder="85032" maxlength="5" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="text" name="zip" required placeholder="85032" maxlength="5" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
       </div>
       <div class="mb-4">
         <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">EMAIL ADDRESS</label>
-        <input type="email" placeholder="mike@ramirezplumbing.com" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+        <input type="email" name="email" placeholder="mike@ramirezplumbing.com" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
       </div>
       <div class="mb-6">
         <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">HOW ARE YOU GETTING LEADS TODAY?</label>
-        <select class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash text-slate">
+        <select name="lead_source" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash text-slate">
           <option value="">Select one...</option>
           <option>Word of mouth only</option>
           <option>HomeAdvisor / Angi</option>
@@ -691,13 +692,6 @@
       </button>
       <p class="text-center text-slate text-xs mt-3">Only 1 spot per zip code. First come, first served.</p>
     </form>
-
-    <!-- Success message (hidden) -->
-    <div id="success-msg" class="hidden reveal bg-green-50 border-2 border-green-400 rounded-2xl p-8 text-center mt-6">
-      <i class="fa-solid fa-circle-check text-green-500 text-4xl mb-4"></i>
-      <h3 class="font-display font-800 text-navy text-2xl mb-2">Territory Claimed!</h3>
-      <p class="text-slate">We've received your info and will have a personalized audit of your digital presence to you within 24 hours.</p>
-    </div>
   </div>
 </section>
 
@@ -749,14 +743,7 @@
     document.getElementById('topnav').classList.toggle('scrolled', window.scrollY > 60);
   });
 
-  // Form submit
-  function handleSubmit(e) {
-    e.preventDefault();
-    e.target.style.display = 'none';
-    const msg = document.getElementById('success-msg');
-    msg.classList.remove('hidden');
-    setTimeout(() => msg.classList.add('visible'), 50);
-  }
+
 </script>
 
 </body>
