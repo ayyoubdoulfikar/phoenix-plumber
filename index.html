@@ -641,34 +641,34 @@
     </p>
 
     <!-- Form -->
-    <form class="reveal bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate/10" action="https://formspree.io/f/mreydpgz" method="POST">
+    <form id="lead-form" class="reveal bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate/10">
       <div class="grid sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">YOUR NAME *</label>
-          <input type="text" name="name" required placeholder="Mike Ramirez" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="text" id="f-name" name="name" required placeholder="Mike Ramirez" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">BUSINESS NAME *</label>
-          <input type="text" name="business" required placeholder="Ramirez Plumbing LLC" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="text" id="f-business" name="business" required placeholder="Ramirez Plumbing LLC" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
       </div>
       <div class="grid sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">PHONE NUMBER *</label>
-          <input type="tel" name="phone" required placeholder="(602) 555-0182" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="tel" id="f-phone" name="phone" required placeholder="(602) 555-0182" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
         <div>
           <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">YOUR ZIP CODE *</label>
-          <input type="text" name="zip" required placeholder="85032" maxlength="5" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+          <input type="text" id="f-zip" name="zip" required placeholder="85032" maxlength="5" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
         </div>
       </div>
       <div class="mb-4">
         <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">EMAIL ADDRESS</label>
-        <input type="email" name="email" placeholder="mike@ramirezplumbing.com" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+        <input type="email" id="f-email" name="email" placeholder="mike@ramirezplumbing.com" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
       </div>
       <div class="mb-6">
         <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">HOW ARE YOU GETTING LEADS TODAY?</label>
-        <select name="lead_source" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash text-slate">
+        <select id="f-source" name="lead_source" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash text-slate">
           <option value="">Select one...</option>
           <option>Word of mouth only</option>
           <option>HomeAdvisor / Angi</option>
@@ -686,12 +686,26 @@
         <span class="flex items-center gap-1"><i class="fa-solid fa-clock text-green-600"></i> Response in under 24 hrs</span>
       </div>
 
-      <button type="submit" class="btn-pulse w-full bg-orange hover:bg-orange-dark text-white font-display font-800 text-xl tracking-wider py-4 rounded-xl transition-colors">
+      <!-- Error banner -->
+      <div id="form-error" class="hidden mb-4 bg-red-50 border border-red-300 text-red-700 text-sm rounded-lg px-4 py-3">
+        <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+        <span id="form-error-msg">Something went wrong. Please try again.</span>
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn-pulse w-full bg-orange hover:bg-orange-dark text-white font-display font-800 text-xl tracking-wider py-4 rounded-xl transition-colors">
         <i class="fa-solid fa-flag-checkered mr-2"></i>
-        CLAIM MY TERRITORY — FREE AUDIT
+        <span id="btn-label">CLAIM MY TERRITORY — FREE AUDIT</span>
       </button>
       <p class="text-center text-slate text-xs mt-3">Only 1 spot per zip code. First come, first served.</p>
     </form>
+
+    <!-- Success message -->
+    <div id="success-msg" class="hidden bg-green-50 border-2 border-green-400 rounded-2xl p-8 text-center mt-6">
+      <i class="fa-solid fa-circle-check text-green-500 text-4xl mb-4"></i>
+      <h3 class="font-display font-800 text-navy text-2xl mb-2">Territory Claimed!</h3>
+      <p class="text-slate">We’ve received your info and will have a personalized audit of your digital presence to you within 24 hours.</p>
+    </div>
+
   </div>
 </section>
 
@@ -737,6 +751,62 @@
     });
   }, { threshold: 0.12 });
   revealEls.forEach(el => observer.observe(el));
+
+  // ── Formspree AJAX submission ──
+  const leadForm = document.getElementById('lead-form');
+  if (leadForm) {
+    leadForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submit-btn');
+      const btnLabel = document.getElementById('btn-label');
+      const errorBox = document.getElementById('form-error');
+      const errorMsg = document.getElementById('form-error-msg');
+      const successBox = document.getElementById('success-msg');
+
+      // Reset error
+      errorBox.classList.add('hidden');
+
+      // Loading state
+      btn.disabled = true;
+      btnLabel.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>SENDING...';
+
+      const data = {
+        name:        document.getElementById('f-name').value,
+        business:    document.getElementById('f-business').value,
+        phone:       document.getElementById('f-phone').value,
+        zip:         document.getElementById('f-zip').value,
+        email:       document.getElementById('f-email').value,
+        lead_source: document.getElementById('f-source').value,
+      };
+
+      try {
+        const response = await fetch('https://formspree.io/f/mreydpgz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          leadForm.style.display = 'none';
+          successBox.classList.remove('hidden');
+        } else {
+          const msg = result.errors ? result.errors.map(e => e.message).join(', ') : 'Submission failed. Please try again.';
+          errorMsg.textContent = msg;
+          errorBox.classList.remove('hidden');
+          btn.disabled = false;
+          btnLabel.innerHTML = '<i class="fa-solid fa-flag-checkered mr-2"></i>CLAIM MY TERRITORY — FREE AUDIT';
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Network error. Please check your connection and try again.';
+        errorBox.classList.remove('hidden');
+        btn.disabled = false;
+        btnLabel.innerHTML = '<i class="fa-solid fa-flag-checkered mr-2"></i>CLAIM MY TERRITORY — FREE AUDIT';
+      }
+    });
+  }
 
   // Sticky nav tint
   window.addEventListener('scroll', () => {
