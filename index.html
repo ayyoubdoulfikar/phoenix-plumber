@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phoenix Plumbers — Claim Your Digital Territory</title>
+  <meta name="description" content="Stop renting leads from HomeAdvisor. Own your Phoenix plumbing territory with a professional website that converts 2AM searches into direct calls." />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Barlow Condensed (display) + Barlow (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:    { DEFAULT: '#1e3a8a', dark: '#162d6e', light: '#2d4fa0' },
+            orange:  { DEFAULT: '#f97316', dark: '#ea6b0e', light: '#fb923c' },
+            slate:   { DEFAULT: '#64748b', light: '#94a3b8', dark: '#475569' },
+            iron:    '#1c2435',
+            ash:     '#f1f5f9',
+          },
+          fontFamily: {
+            display: ['Barlow Condensed', 'sans-serif'],
+            body:    ['Barlow', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Barlow', sans-serif; background: #f1f5f9; color: #1c2435; }
+
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-repeat: repeat; background-size: 180px 180px; opacity: 0.6;
+    }
+    body > * { position: relative; z-index: 1; }
+
+    /* ── Display font shorthand ── */
+    .font-display { font-family: 'Barlow Condensed', sans-serif; }
+
+    /* ── Hero diagonal cut ── */
+    .hero-clip { clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); }
+
+    /* ── Pipe-line decorative divider ── */
+    .pipe-divider {
+      display: flex; align-items: center; gap: 12px;
+      color: #f97316; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .pipe-divider::before, .pipe-divider::after {
+      content: ''; flex: 1; height: 2px;
+      background: linear-gradient(to right, transparent, #f97316, transparent);
+    }
+
+    /* ── Animated counter ── */
+    @keyframes countUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .stat-num { animation: countUp 0.6s ease both; }
+
+    /* ── Card hover lift ── */
+    .card-lift { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .card-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(30,58,138,0.15); }
+
+    /* ── CTA pulse ring ── */
+    @keyframes ring { 0%,100%{ box-shadow: 0 0 0 0 rgba(249,115,22,0.55); } 60%{ box-shadow: 0 0 0 18px rgba(249,115,22,0); } }
+    .btn-pulse { animation: ring 2.2s ease-in-out infinite; }
+
+    /* ── Scroll fade-in ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Table stripe ── */
+    .compare-row:nth-child(even) { background: rgba(30,58,138,0.04); }
+
+    /* ── Sticky nav ── */
+    #topnav { transition: background 0.3s, box-shadow 0.3s; }
+    #topnav.scrolled { background: #162d6e !important; box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
+
+    /* ── Form input focus ── */
+    .form-input:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.2); }
+
+    /* ── Marquee ── */
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .marquee-inner { animation: marquee 22s linear infinite; display: flex; width: max-content; }
+    .marquee-wrap { overflow: hidden; }
+
+    /* ── Grid blueprint watermark ── */
+    .blueprint-bg {
+      background-color: #1e3a8a;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     STICKY NAV
+═══════════════════════════════════════ -->
+<nav id="topnav" class="fixed top-0 left-0 right-0 z-50 bg-navy/90 backdrop-blur-md px-4 py-3">
+  <div class="max-w-5xl mx-auto flex items-center justify-between">
+    <div class="font-display font-800 text-white text-xl tracking-wide flex items-center gap-2">
+      <i class="fa-solid fa-wrench text-orange text-base"></i>
+      <span>PhoenixPlumb<span class="text-orange">PRO</span></span>
+    </div>
+    <a href="#claim" class="bg-orange hover:bg-orange-dark text-white text-sm font-display font-700 tracking-wider px-4 py-2 rounded transition-colors">
+      CLAIM MY TERRITORY
+    </a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section class="hero-clip blueprint-bg pt-28 pb-40 px-4 relative overflow-hidden">
+
+  <!-- Decorative pipe graphic -->
+  <div class="absolute right-0 top-0 h-full w-1/3 opacity-5 pointer-events-none select-none" aria-hidden="true">
+    <svg viewBox="0 0 200 600" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-full w-full">
+      <rect x="60" width="80" height="600" rx="8" fill="white"/>
+      <rect x="0" y="120" width="200" height="60" rx="8" fill="white"/>
+      <rect x="0" y="300" width="200" height="60" rx="8" fill="white"/>
+      <circle cx="100" cy="150" r="20" fill="white"/>
+      <circle cx="100" cy="330" r="20" fill="white"/>
+    </svg>
+  </div>
+
+  <div class="max-w-3xl mx-auto text-center relative">
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 bg-orange/15 border border-orange/40 text-orange text-xs font-display font-700 tracking-widest px-4 py-1.5 rounded-full mb-6 uppercase">
+      <i class="fa-solid fa-location-dot"></i> Phoenix, AZ · Maricopa County
+    </div>
+
+    <!-- Headline -->
+    <h1 class="font-display font-900 text-white text-5xl sm:text-6xl md:text-7xl leading-none tracking-tight mb-5">
+      YOUR REPUTATION<br/>
+      <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(135deg, #f97316, #fbbf24);">IS 5&#8209;STARS.</span><br/>
+      YOUR DIGITAL<br/>
+      PRESENCE IS
+      <span class="relative inline-block">
+        <span class="relative z-10 text-white">INVISIBLE.</span>
+        <span class="absolute inset-0 bg-slate-dark/60 -skew-x-3 rounded-sm -z-0"></span>
+      </span>
+    </h1>
+
+    <!-- Sub-headline -->
+    <p class="text-slate-light text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto mb-8">
+      Phoenix homeowners are searching <strong class="text-white">"Emergency Plumber Near Me"</strong> right now — at 2&nbsp;AM, in a panic, with a flooded kitchen.
+      If your Google Profile has <em>no website</em>, you're handing those&nbsp;calls to the franchises.
+    </p>
+
+    <!-- CTAs -->
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="#claim" class="btn-pulse bg-orange hover:bg-orange-dark text-white font-display font-800 text-lg tracking-wider px-8 py-4 rounded-lg transition-colors">
+        <i class="fa-solid fa-flag mr-2"></i> CLAIM MY DIGITAL TERRITORY
+      </a>
+      <a href="#problem" class="bg-white/10 hover:bg-white/20 text-white font-display font-700 tracking-wider px-8 py-4 rounded-lg transition-colors border border-white/20">
+        SEE HOW MUCH I'M LOSING
+      </a>
+    </div>
+
+    <!-- Social proof -->
+    <p class="text-slate-light/70 text-sm mt-6">
+      <i class="fa-solid fa-star text-orange text-xs"></i>
+      <i class="fa-solid fa-star text-orange text-xs"></i>
+      <i class="fa-solid fa-star text-orange text-xs"></i>
+      <i class="fa-solid fa-star text-orange text-xs"></i>
+      <i class="fa-solid fa-star text-orange text-xs"></i>
+      &nbsp;Trusted by local Phoenix plumbing companies · ROC Licensed Professionals
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     MARQUEE TICKER
+═══════════════════════════════════════ -->
+<div class="bg-orange py-3 marquee-wrap overflow-hidden">
+  <div class="marquee-inner">
+    <!-- duplicated for seamless loop -->
+    <template id="ticker-items">
+      <span class="font-display font-700 text-white text-sm tracking-widest uppercase px-8 whitespace-nowrap"><i class="fa-solid fa-droplet mr-2"></i> 230 PPM Hard Water Crisis</span>
+      <span class="font-display font-700 text-white/50 text-sm px-4">▸</span>
+      <span class="font-display font-700 text-white text-sm tracking-widest uppercase px-8 whitespace-nowrap"><i class="fa-solid fa-fire mr-2"></i> Thermal Stress Season Incoming</span>
+      <span class="font-display font-700 text-white/50 text-sm px-4">▸</span>
+      <span class="font-display font-700 text-white text-sm tracking-widest uppercase px-8 whitespace-nowrap"><i class="fa-solid fa-chart-line mr-2"></i> Franchise Sites Dominate Local Pack</span>
+      <span class="font-display font-700 text-white/50 text-sm px-4">▸</span>
+      <span class="font-display font-700 text-white text-sm tracking-widest uppercase px-8 whitespace-nowrap"><i class="fa-solid fa-phone mr-2"></i> 68% of Searches Happen After 9 PM</span>
+      <span class="font-display font-700 text-white/50 text-sm px-4">▸</span>
+      <span class="font-display font-700 text-white text-sm tracking-widest uppercase px-8 whitespace-nowrap"><i class="fa-solid fa-wrench mr-2"></i> Own Your Leads — Stop Renting</span>
+      <span class="font-display font-700 text-white/50 text-sm px-4">▸</span>
+    </template>
+  </div>
+</div>
+<script>
+  // Double-render ticker items for seamless loop
+  const tmpl = document.getElementById('ticker-items');
+  const inner = document.querySelector('.marquee-inner');
+  inner.innerHTML = tmpl.innerHTML + tmpl.innerHTML;
+</script>
+
+
+<!-- ═══════════════════════════════════════
+     VALLEY OF THE SUN REALITY
+═══════════════════════════════════════ -->
+<section id="problem" class="py-20 px-4 bg-ash">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="pipe-divider mb-4 reveal">PHOENIX MARKET INTELLIGENCE</div>
+    <h2 class="font-display font-900 text-navy text-4xl sm:text-5xl leading-tight mb-4 reveal">
+      THE VALLEY OF THE SUN<br/>
+      <span class="text-orange">CREATES DEMAND</span> UNLIKE<br/>
+      ANY OTHER MARKET.
+    </h2>
+    <p class="text-slate text-lg max-w-2xl mb-14 reveal">
+      You already know this — it's why you're busy. The real question is: who's capturing that demand?
+    </p>
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
+      <div class="card-lift reveal bg-navy rounded-xl p-5 text-center">
+        <div class="stat-num font-display font-900 text-orange text-4xl">230</div>
+        <div class="text-navy-light text-xs font-display font-700 tracking-widest text-white/70 mt-1">PPM<br/>HARD WATER</div>
+      </div>
+      <div class="card-lift reveal bg-navy rounded-xl p-5 text-center">
+        <div class="stat-num font-display font-900 text-orange text-4xl">118°</div>
+        <div class="text-navy-light text-xs font-display font-700 tracking-widest text-white/70 mt-1">PEAK TEMPS<br/>PIPE STRESS</div>
+      </div>
+      <div class="card-lift reveal bg-navy rounded-xl p-5 text-center">
+        <div class="stat-num font-display font-900 text-orange text-4xl">$300</div>
+        <div class="text-navy-light text-xs font-display font-700 tracking-widest text-white/70 mt-1">% MARKUP<br/>ON ANGI LEADS</div>
+      </div>
+      <div class="card-lift reveal bg-navy rounded-xl p-5 text-center">
+        <div class="stat-num font-display font-900 text-orange text-4xl">68%</div>
+        <div class="text-navy-light text-xs font-display font-700 tracking-widest text-white/70 mt-1">SEARCHES<br/>AFTER 9&nbsp;PM</div>
+      </div>
+    </div>
+
+    <!-- Detail cards -->
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 border-t-4 border-orange shadow-sm">
+        <div class="w-11 h-11 bg-orange/10 rounded-lg flex items-center justify-center mb-4">
+          <i class="fa-solid fa-flask-vial text-orange text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">The Mineralization Crisis</h3>
+        <p class="text-slate text-sm leading-relaxed">
+          Phoenix tap water runs at <strong>230&nbsp;ppm</strong> — nearly 5× the "soft" threshold. Calcium scale clogs water heaters, destroys pressure regulators, and silts up tankless units. Every homeowner older than 5 years is a potential emergency call.
+        </p>
+        <div class="mt-4 flex items-center gap-2 text-orange text-xs font-display font-700 tracking-wider">
+          <i class="fa-solid fa-arrow-trend-up"></i> HIGH SEASONAL DEMAND
+        </div>
+      </div>
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 border-t-4 border-navy shadow-sm">
+        <div class="w-11 h-11 bg-navy/10 rounded-lg flex items-center justify-center mb-4">
+          <i class="fa-solid fa-temperature-arrow-up text-navy text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">Thermal Stress on Pipes</h3>
+        <p class="text-slate text-sm leading-relaxed">
+          When Phoenix hits 118°F, PVC supply lines, rubber fittings, and caliche-adjacent copper experience aggressive expansion cycles. Combine with cooled AC condensation lines and you have a recipe for 2&nbsp;AM blowouts — calls that go to whoever <em>has a website</em>.
+        </p>
+        <div class="mt-4 flex items-center gap-2 text-navy text-xs font-display font-700 tracking-wider">
+          <i class="fa-solid fa-calendar-day"></i> SUMMER EMERGENCY SPIKE
+        </div>
+      </div>
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 border-t-4 border-slate shadow-sm">
+        <div class="w-11 h-11 bg-slate/10 rounded-lg flex items-center justify-center mb-4">
+          <i class="fa-solid fa-hill-rockslide text-slate text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">Caliche Soil Shifting</h3>
+        <p class="text-slate text-sm leading-relaxed">
+          The hardpan caliche layer beneath the Valley shrinks and heaves with monsoon moisture swings. Underground drain lines crack. Slab leaks develop silently. Hydro-jetting and camera inspections are in constant demand — if homeowners can <em>find</em> someone who does them.
+        </p>
+        <div class="mt-4 flex items-center gap-2 text-slate text-xs font-display font-700 tracking-wider">
+          <i class="fa-solid fa-cloud-showers-heavy"></i> MONSOON SEASON DRIVER
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     THE "DIGITAL FRANCHISE" THREAT
+═══════════════════════════════════════ -->
+<section class="py-20 px-4 blueprint-bg">
+  <div class="max-w-5xl mx-auto">
+    <div class="pipe-divider mb-4 reveal" style="color:#f97316"><span style="color: rgba(249,115,22,0.7)">THE THREAT</span></div>
+    <h2 class="font-display font-900 text-white text-4xl sm:text-5xl leading-tight mb-6 reveal">
+      WHILE YOU'RE ON THE JOB,<br/>
+      <span class="text-orange">DIGITAL FRANCHISES</span><br/>
+      ARE TAKING YOUR CALLS.
+    </h2>
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+
+      <div class="reveal">
+        <p class="text-slate-light text-lg leading-relaxed mb-6">
+          HomeAdvisor, Angi, Thumbtack — they rank in the <strong class="text-white">Google Local Pack</strong> for "emergency plumber Phoenix" with polished sites, 24/7 chat bots, and instant booking. They take your call, resell it to 3 other plumbers, and pocket a <strong class="text-orange">300% markup</strong>.
+        </p>
+        <p class="text-slate-light leading-relaxed mb-6">
+          You've got 30+ years of experience, an <strong class="text-white">ROC license</strong>, and 5-star reviews. You're better than all of them. But the homeowner at midnight doesn't know that — because when they Google you, there's nothing to find.
+        </p>
+        <p class="text-slate-light leading-relaxed">
+          You're not losing to better plumbers. <strong class="text-orange">You're losing to better web pages.</strong>
+        </p>
+      </div>
+
+      <!-- Visual: Local Pack mockup -->
+      <div class="reveal">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-2xl">
+          <div class="bg-slate-dark px-4 py-3 flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+            <div class="flex-1 bg-slate-DEFAULT/30 rounded text-slate-light text-xs px-3 py-1 ml-2">google.com</div>
+          </div>
+          <div class="p-4">
+            <div class="text-xs text-slate font-600 mb-3">Results for: <em>"emergency plumber phoenix"</em></div>
+            <!-- Franchise result -->
+            <div class="border border-orange/30 rounded-xl p-3 mb-2 bg-orange/5">
+              <div class="flex items-start justify-between mb-1">
+                <span class="font-display font-700 text-navy text-sm">🏢 RotoRooter Phoenix</span>
+                <span class="text-xs bg-orange text-white px-2 py-0.5 rounded font-700">AD</span>
+              </div>
+              <div class="text-xs text-slate mb-1">roto-rooter.com · ⭐4.2 (1,842 reviews)</div>
+              <div class="text-xs text-green-600 font-600">✓ Website · Book Online · 24/7</div>
+            </div>
+            <!-- Marketplace -->
+            <div class="border border-slate/20 rounded-xl p-3 mb-2">
+              <span class="font-display font-700 text-navy text-sm">📋 HomeAdvisor — Phoenix Plumbers</span>
+              <div class="text-xs text-slate mt-1">homeadvisor.com · 48 verified pros</div>
+              <div class="text-xs text-green-600 font-600">✓ Website · Compare Quotes</div>
+            </div>
+            <!-- YOU — missing link -->
+            <div class="border-2 border-dashed border-red-300 rounded-xl p-3 bg-red-50">
+              <div class="flex items-start justify-between mb-1">
+                <span class="font-display font-700 text-navy text-sm">🔧 Your Business Name</span>
+                <span class="text-xs bg-slate text-white px-2 py-0.5 rounded font-700">GBP</span>
+              </div>
+              <div class="text-xs text-slate mb-1">⭐⭐⭐⭐⭐ 4.9 (87 reviews)</div>
+              <div class="text-xs text-red-500 font-700">✗ No Website Link · No Booking</div>
+              <div class="text-xs text-red-400 mt-1 italic">Homeowner moves on in 3 seconds.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     ROI COMPARISON TABLE
+═══════════════════════════════════════ -->
+<section class="py-20 px-4 bg-ash">
+  <div class="max-w-4xl mx-auto">
+    <div class="pipe-divider mb-4 reveal">THE MATH DOESN'T LIE</div>
+    <h2 class="font-display font-900 text-navy text-4xl sm:text-5xl leading-tight mb-4 reveal">
+      RENTING LEADS<br/>
+      <span class="text-orange">VS. OWNING THEM.</span>
+    </h2>
+    <p class="text-slate text-lg mb-10 reveal max-w-2xl">Run this math in your head on your next job. Every month you don't own your leads is money left on someone else's table.</p>
+
+    <!-- Table -->
+    <div class="reveal rounded-2xl overflow-hidden shadow-xl border border-slate/10">
+      <table class="w-full text-sm">
+        <thead>
+          <tr>
+            <th class="bg-slate-dark text-white font-display font-700 tracking-widest text-xs uppercase p-4 text-left w-1/3">METRIC</th>
+            <th class="bg-red-900/80 text-white font-display font-700 tracking-widest text-xs uppercase p-4 text-center">
+              <i class="fa-brands fa-adversal mr-1"></i>Renting Leads<br/><span class="font-400 text-red-300 normal-case text-xs">Angi / HomeAdvisor</span>
+            </th>
+            <th class="bg-navy text-white font-display font-700 tracking-widest text-xs uppercase p-4 text-center">
+              <i class="fa-solid fa-house-flag mr-1 text-orange"></i>Owning Leads<br/><span class="font-400 text-blue-300 normal-case text-xs">Your Website</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white">
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Cost per lead</td>
+            <td class="p-4 text-center text-red-600 font-700">$45–$120<br/><span class="font-400 text-slate text-xs">per shared lead</span></td>
+            <td class="p-4 text-center text-green-700 font-700">$0<br/><span class="font-400 text-slate text-xs">after setup</span></td>
+          </tr>
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Lead exclusivity</td>
+            <td class="p-4 text-center text-red-600">❌ Sold to 3–5 plumbers</td>
+            <td class="p-4 text-center text-green-700 font-700">✅ 100% yours</td>
+          </tr>
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Monthly cost (10 leads)</td>
+            <td class="p-4 text-center text-red-600 font-700">$450–$1,200</td>
+            <td class="p-4 text-center text-green-700 font-700">~$0<br/><span class="font-400 text-slate text-xs">(hosting ≈ $10/mo)</span></td>
+          </tr>
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Markup on your job</td>
+            <td class="p-4 text-center text-red-600 font-700">Up to 300%</td>
+            <td class="p-4 text-center text-green-700 font-700">0%</td>
+          </tr>
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Customer sees your ROC</td>
+            <td class="p-4 text-center text-red-600">❌ Hidden behind platform</td>
+            <td class="p-4 text-center text-green-700">✅ Front and center</td>
+          </tr>
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Online booking available</td>
+            <td class="p-4 text-center text-red-600">❌ Platform controls it</td>
+            <td class="p-4 text-center text-green-700">✅ Your form, your calendar</td>
+          </tr>
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Brand equity built</td>
+            <td class="p-4 text-center text-red-600">❌ You build THEIR brand</td>
+            <td class="p-4 text-center text-green-700 font-700">✅ Every click = yours</td>
+          </tr>
+          <tr class="compare-row">
+            <td class="p-4 font-600 text-navy">Cancel = lose everything</td>
+            <td class="p-4 text-center text-red-600 font-700">YES</td>
+            <td class="p-4 text-center text-green-700 font-700">Never</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="bg-orange/10 p-4 text-center">
+              <span class="font-display font-800 text-navy text-lg">Annual Difference: </span>
+              <span class="font-display font-900 text-orange text-2xl">$5,400 – $14,400</span>
+              <span class="text-slate text-sm ml-2">stays in your pocket</span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     FUTURE-STATE: THE 2AM CALL
+═══════════════════════════════════════ -->
+<section class="py-20 px-4 bg-iron relative overflow-hidden">
+
+  <!-- BG glow -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-orange/5 blur-3xl"></div>
+  </div>
+
+  <div class="max-w-5xl mx-auto relative">
+    <div class="pipe-divider mb-4 reveal" style="color:#f97316"><span style="color:rgba(249,115,22,0.7)">THE FUTURE STATE</span></div>
+    <h2 class="font-display font-900 text-white text-4xl sm:text-5xl leading-tight mb-4 reveal">
+      IMAGINE YOUR PHONE<br/>
+      RINGING AT <span class="text-orange">2:00&nbsp;AM</span><br/>
+      AND YOU DIDN'T PAY<br/>FOR THAT CALL.
+    </h2>
+    <p class="text-slate-light text-lg max-w-2xl mb-14 reveal">
+      Here's the future your website creates:
+    </p>
+
+    <!-- Timeline -->
+    <div class="relative">
+      <!-- Vertical line -->
+      <div class="absolute left-5 sm:left-8 top-0 bottom-0 w-0.5 bg-orange/30" aria-hidden="true"></div>
+
+      <div class="space-y-8">
+
+        <div class="flex gap-5 sm:gap-8 reveal">
+          <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 rounded-full bg-navy border-2 border-orange flex items-center justify-center z-10">
+            <i class="fa-solid fa-moon text-orange text-sm sm:text-lg"></i>
+          </div>
+          <div class="flex-1 bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6">
+            <div class="font-display font-700 text-orange text-sm tracking-widest mb-1">2:04 AM · SCOTTSDALE</div>
+            <h3 class="font-display font-800 text-white text-xl mb-2">Homeowner wakes up to a burst line</h3>
+            <p class="text-slate-light text-sm">She grabs her phone, Googles <em>"emergency plumber 85254"</em>. She sees three results. Two have websites. One doesn't. She doesn't think twice.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-5 sm:gap-8 reveal">
+          <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 rounded-full bg-navy border-2 border-orange flex items-center justify-center z-10">
+            <i class="fa-solid fa-mobile-screen text-orange text-sm sm:text-lg"></i>
+          </div>
+          <div class="flex-1 bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6">
+            <div class="font-display font-700 text-orange text-sm tracking-widest mb-1">2:05 AM · 15 SECONDS</div>
+            <h3 class="font-display font-800 text-white text-xl mb-2">She lands on YOUR mobile site</h3>
+            <p class="text-slate-light text-sm">She sees your <strong class="text-white">ROC license number</strong>, your <strong class="text-white">hydro-jetting badge</strong>, your <strong class="text-white">4.9-star rating</strong> with 87 real names, and a big orange button: <span class="text-orange font-700">"Call Now — We Answer 24/7"</span></p>
+          </div>
+        </div>
+
+        <div class="flex gap-5 sm:gap-8 reveal">
+          <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 rounded-full bg-orange border-2 border-orange-dark flex items-center justify-center z-10">
+            <i class="fa-solid fa-phone text-white text-sm sm:text-lg"></i>
+          </div>
+          <div class="flex-1 bg-orange/10 border border-orange/30 rounded-xl p-4 sm:p-6">
+            <div class="font-display font-700 text-orange text-sm tracking-widest mb-1">2:05 AM · YOUR PHONE</div>
+            <h3 class="font-display font-800 text-white text-xl mb-2">Your phone rings. It's a direct call.</h3>
+            <p class="text-slate-light text-sm">No middleman. No lead fee. No competing with 4 other plumbers. Just a homeowner who <em>already trusts you</em> — before you've said a word. <strong class="text-orange">You didn't pay for that lead. Your website earned it.</strong></p>
+          </div>
+        </div>
+
+        <div class="flex gap-5 sm:gap-8 reveal">
+          <div class="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 rounded-full bg-navy border-2 border-slate flex items-center justify-center z-10">
+            <i class="fa-solid fa-calendar-check text-slate-light text-sm sm:text-lg"></i>
+          </div>
+          <div class="flex-1 bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6">
+            <div class="font-display font-700 text-slate-light text-sm tracking-widest mb-1">THE SILENT SEGMENT</div>
+            <h3 class="font-display font-800 text-white text-xl mb-2">Some customers never call. They book online.</h3>
+            <p class="text-slate-light text-sm">A growing segment of millennial Phoenix homeowners — especially in Tempe, Chandler, and Ahwatukee — <strong class="text-white">refuse to make phone calls</strong>. They want to book a non-emergency appointment online, read reviews, and pay digitally. Without a site, <em>you don't exist to them.</em></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     THE SOLUTION: DIGITAL FOUNDATION
+═══════════════════════════════════════ -->
+<section class="py-20 px-4 bg-ash">
+  <div class="max-w-5xl mx-auto">
+    <div class="pipe-divider mb-4 reveal">THE SOLUTION</div>
+    <h2 class="font-display font-900 text-navy text-4xl sm:text-5xl leading-tight mb-4 reveal">
+      YOUR <span class="text-orange">DIGITAL FOUNDATION</span><br/>
+      PACKAGE.
+    </h2>
+    <p class="text-slate text-lg max-w-2xl mb-12 reveal">
+      We bridge the gap between your 30+ years of field experience and today's "near me" search intent. One purpose-built site that works 24/7 — even when you're elbow-deep in a slab repair.
+    </p>
+
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 shadow-sm border border-slate/10">
+        <div class="w-12 h-12 bg-orange rounded-xl flex items-center justify-center mb-4">
+          <i class="fa-solid fa-mobile-screen-button text-white text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">Mobile-First Design</h3>
+        <p class="text-slate text-sm leading-relaxed">Built for the phone screen first. Loads in under 2 seconds on LTE. Big tap targets. No pinching or zooming. Because 90% of emergency searches are mobile.</p>
+      </div>
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 shadow-sm border border-slate/10">
+        <div class="w-12 h-12 bg-navy rounded-xl flex items-center justify-center mb-4">
+          <i class="fa-solid fa-shield-halved text-white text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">ROC License Display</h3>
+        <p class="text-slate text-sm leading-relaxed">Your Arizona ROC number, insurance certs, and bonding info displayed prominently — the trust signals that close jobs before you pick up the phone.</p>
+      </div>
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 shadow-sm border border-slate/10">
+        <div class="w-12 h-12 bg-orange rounded-xl flex items-center justify-center mb-4">
+          <i class="fa-solid fa-magnifying-glass-location text-white text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">Local SEO Foundation</h3>
+        <p class="text-slate text-sm leading-relaxed">Structured data for Phoenix zip codes (85001–85099), service pages for hydro-jetting, water heater replacement, slab leaks — exactly what Google wants to rank you for.</p>
+      </div>
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 shadow-sm border border-slate/10">
+        <div class="w-12 h-12 bg-navy rounded-xl flex items-center justify-center mb-4">
+          <i class="fa-solid fa-star text-white text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">Google Review Integration</h3>
+        <p class="text-slate text-sm leading-relaxed">Your existing 5-star reviews pulled directly from your Google Business Profile and displayed on every page. Social proof where it converts — not buried on a platform.</p>
+      </div>
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 shadow-sm border border-slate/10">
+        <div class="w-12 h-12 bg-orange rounded-xl flex items-center justify-center mb-4">
+          <i class="fa-solid fa-calendar-plus text-white text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">Online Booking Form</h3>
+        <p class="text-slate text-sm leading-relaxed">Capture the silent segment. A simple form that lands in your inbox (or texts you) so the customers who won't call still book with you — not your competitor.</p>
+      </div>
+
+      <div class="card-lift reveal bg-white rounded-2xl p-6 shadow-sm border border-slate/10">
+        <div class="w-12 h-12 bg-navy rounded-xl flex items-center justify-center mb-4">
+          <i class="fa-brands fa-google text-white text-xl"></i>
+        </div>
+        <h3 class="font-display font-800 text-navy text-xl mb-2">GBP Website Link</h3>
+        <p class="text-slate text-sm leading-relaxed">The missing link in your Google Business Profile — the website URL that unlocks the Local Pack ranking algorithm and tells Google you're a legitimate, established business.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     TESTIMONIAL / AUTHORITY
+═══════════════════════════════════════ -->
+<section class="py-16 px-4 bg-navy relative overflow-hidden">
+  <div class="absolute inset-0 opacity-5 pointer-events-none select-none" aria-hidden="true">
+    <svg viewBox="0 0 400 400" fill="none" class="w-full h-full"><text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle" font-size="320" fill="white" font-family="sans-serif" font-weight="900">"</text></svg>
+  </div>
+  <div class="max-w-3xl mx-auto text-center relative">
+    <i class="fa-solid fa-quote-left text-orange text-4xl mb-6 opacity-60"></i>
+    <blockquote class="font-display font-700 text-white text-2xl sm:text-3xl leading-snug mb-6 reveal">
+      "I've been plumbing the East Valley for 28 years. I thought a website was for tech companies. After getting one, I dropped HomeAdvisor completely. My first month I saved over $900 in lead fees — and got 4 jobs from Google that I never would've gotten."
+    </blockquote>
+    <div class="flex items-center justify-center gap-3 reveal">
+      <div class="w-12 h-12 rounded-full bg-orange/20 border-2 border-orange flex items-center justify-center">
+        <i class="fa-solid fa-user-tie text-orange"></i>
+      </div>
+      <div class="text-left">
+        <div class="font-display font-700 text-white">Mike T.</div>
+        <div class="text-slate-light text-sm">Mesa, AZ · 28 years in business · ROC Licensed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     CTA: CLAIM YOUR TERRITORY
+═══════════════════════════════════════ -->
+<section id="claim" class="py-20 px-4 bg-ash">
+  <div class="max-w-2xl mx-auto">
+    <div class="pipe-divider mb-4 reveal">YOUR MOVE</div>
+    <h2 class="font-display font-900 text-navy text-4xl sm:text-5xl leading-tight mb-4 text-center reveal">
+      CLAIM YOUR<br/>
+      <span class="text-orange">DIGITAL TERRITORY</span><br/>
+      BEFORE SOMEONE ELSE DOES.
+    </h2>
+    <p class="text-slate text-center text-lg mb-10 reveal">
+      Spots are limited to <strong>one plumbing company per Phoenix zip code</strong>. Tell us about your business and we'll show you exactly what's missing from your digital presence — no cost, no commitment.
+    </p>
+
+    <!-- Form -->
+    <form class="reveal bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate/10" onsubmit="handleSubmit(event)">
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">YOUR NAME *</label>
+          <input type="text" required placeholder="Mike Ramirez" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+        </div>
+        <div>
+          <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">BUSINESS NAME *</label>
+          <input type="text" required placeholder="Ramirez Plumbing LLC" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+        </div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">PHONE NUMBER *</label>
+          <input type="tel" required placeholder="(602) 555-0182" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+        </div>
+        <div>
+          <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">YOUR ZIP CODE *</label>
+          <input type="text" required placeholder="85032" maxlength="5" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">EMAIL ADDRESS</label>
+        <input type="email" placeholder="mike@ramirezplumbing.com" class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash" />
+      </div>
+      <div class="mb-6">
+        <label class="block font-display font-700 text-navy text-sm tracking-wider mb-1.5">HOW ARE YOU GETTING LEADS TODAY?</label>
+        <select class="form-input w-full border border-slate/30 rounded-lg px-4 py-3 text-sm transition-all bg-ash text-slate">
+          <option value="">Select one...</option>
+          <option>Word of mouth only</option>
+          <option>HomeAdvisor / Angi</option>
+          <option>Google Local Services Ads</option>
+          <option>Yelp / Thumbtack</option>
+          <option>Multiple platforms</option>
+          <option>I'm not actively marketing</option>
+        </select>
+      </div>
+
+      <!-- Trust signals -->
+      <div class="flex flex-wrap gap-3 text-xs text-slate mb-6">
+        <span class="flex items-center gap-1"><i class="fa-solid fa-lock text-green-600"></i> No spam, ever</span>
+        <span class="flex items-center gap-1"><i class="fa-solid fa-shield text-green-600"></i> Free audit, no obligation</span>
+        <span class="flex items-center gap-1"><i class="fa-solid fa-clock text-green-600"></i> Response in under 24 hrs</span>
+      </div>
+
+      <button type="submit" class="btn-pulse w-full bg-orange hover:bg-orange-dark text-white font-display font-800 text-xl tracking-wider py-4 rounded-xl transition-colors">
+        <i class="fa-solid fa-flag-checkered mr-2"></i>
+        CLAIM MY TERRITORY — FREE AUDIT
+      </button>
+      <p class="text-center text-slate text-xs mt-3">Only 1 spot per zip code. First come, first served.</p>
+    </form>
+
+    <!-- Success message (hidden) -->
+    <div id="success-msg" class="hidden reveal bg-green-50 border-2 border-green-400 rounded-2xl p-8 text-center mt-6">
+      <i class="fa-solid fa-circle-check text-green-500 text-4xl mb-4"></i>
+      <h3 class="font-display font-800 text-navy text-2xl mb-2">Territory Claimed!</h3>
+      <p class="text-slate">We've received your info and will have a personalized audit of your digital presence to you within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="bg-iron py-10 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+      <div class="font-display font-900 text-white text-2xl tracking-wide">
+        <i class="fa-solid fa-wrench text-orange mr-2"></i>
+        PhoenixPlumb<span class="text-orange">PRO</span>
+      </div>
+      <div class="flex gap-6">
+        <a href="#problem" class="text-slate-light hover:text-white text-sm transition-colors">The Problem</a>
+        <a href="#claim" class="text-slate-light hover:text-white text-sm transition-colors">Get Started</a>
+      </div>
+    </div>
+    <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate">
+      <span>© 2025 PhoenixPlumbPRO · Serving Maricopa County Plumbing Professionals</span>
+      <span>Not affiliated with HomeAdvisor, Angi, or Roto-Rooter</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════
+     JS: Scroll reveal + Nav + Form
+═══════════════════════════════════════ -->
+<script>
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // stagger siblings
+        const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+        const idx = siblings.indexOf(e.target);
+        e.target.style.transitionDelay = `${idx * 0.07}s`;
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Sticky nav tint
+  window.addEventListener('scroll', () => {
+    document.getElementById('topnav').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    e.target.style.display = 'none';
+    const msg = document.getElementById('success-msg');
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('visible'), 50);
+  }
+</script>
+
+</body>
+</html>
